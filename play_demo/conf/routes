@@ -3,7 +3,15 @@
 # ~~~~
 
 # Home page
-GET     /                           controllers.Application.index
+GET     /                           	controllers.Application.index
+
+GET		/todos							controllers.TodoController.listTodos
+
+POST    /todos							controllers.TodoController.createTodo
+
+PUT     /todos/:id						controllers.TodoController.updateTodo(id: String)
+
+
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
