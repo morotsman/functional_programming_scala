@@ -15,7 +15,11 @@ libraryDependencies ++= Seq(
 
 libraryDependencies ++= Seq(
   "org.reactivemongo" %% "reactivemongo" % "0.10.5.0.akka23",
-  "org.reactivemongo" %% "play2-reactivemongo" % "0.10.5.0.akka23"
+  "org.reactivemongo" %% "play2-reactivemongo" % "0.10.5.0.akka23",
+  "org.webjars" % "angularjs" % "1.3.0-beta.2",
+  "org.webjars" % "requirejs" % "2.1.11-1"  
 )
+
+pipelineStages := Seq(rjs, digest, gzip)
 
 
