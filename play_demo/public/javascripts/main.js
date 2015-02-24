@@ -4,32 +4,27 @@
 
 requirejs.config({
   paths: {
-    'angular': ['../lib/angularjs/angular'],
-    'angular-route': ['../lib/angularjs/angular-route']
+    'angular': ['../lib/angularjs/angular']
   },
   shim: {
     'angular': {
-      exports : 'angular'
-    },
-    'angular-route': {
-      deps: ['angular'],
       exports : 'angular'
     }
   }
 });
 
-require(['angular', './controllers', './directives', './filters', './services', 'angular-route'],
+require(['angular', './controllers', './services'],
   function(angular, controllers) {
 
     // Declare app level module which depends on filters, and services
 
-    angular.module('myApp', ['myApp.filters', 'myApp.services', 'myApp.directives', 'ngRoute']).
-      config(['$routeProvider', function($routeProvider) {
-        $routeProvider.when('/view1', {templateUrl: 'partials/partial1.html', controller: controllers.MyCtrl1});
-        $routeProvider.when('/view2', {templateUrl: 'partials/partial2.html', controller: controllers.MyCtrl2});
-        $routeProvider.otherwise({redirectTo: '/view1'});
-      }]);
+    var app = angular.module('myApp', ['myApp.services', 'myApp.controllers']);
+    
+    var $html = angular.element(document.getElementsByTagName('html')[0]);
 
-    angular.bootstrap(document, ['myApp']);
+	angular.element().ready(function() {
+		$html.addClass('ng-app');
+		angular.bootstrap($html, [app['name']]);
+	});    
 
 });
