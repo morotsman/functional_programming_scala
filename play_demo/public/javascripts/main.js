@@ -13,12 +13,12 @@ requirejs.config({
   }
 });
 
-require(['angular', './controllers', './services'],
+require(['angular', './controllers', './daos'],
   function(angular, controllers) {
 
     // Declare app level module which depends on filters, and services
 
-    var app = angular.module('myApp', ['myApp.services', 'myApp.controllers']);
+    var app = angular.module('myApp', [ 'myApp.controllers']);
     
     var $html = angular.element(document.getElementsByTagName('html')[0]);
 

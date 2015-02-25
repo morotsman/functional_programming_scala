@@ -16,7 +16,8 @@ object TodoController extends Controller {
     TodoDao.getTodos().
       map(todos => Ok(Json.toJson(todos))).
       recover {
-        convertException
+        case t: TimeoutException => InternalServerError(t.getMessage)
+        case u                   => InternalServerError("Unknown server exception:" + u.getMessage)
       }
   }
 
@@ -26,9 +27,10 @@ object TodoController extends Controller {
         {
           TodoDao.insert(todo)
             .map { result =>
-              Ok("Todo Created")
-            }.recover {
-              convertException
+              result match {
+                case t: Todo      => Ok(Json.toJson(t))
+                case e: Throwable => convertException(e)
+              }
             }
         }
     }.recoverTotal {
@@ -42,9 +44,10 @@ object TodoController extends Controller {
         {
           TodoDao.update(id, todo)
             .map { result =>
-              Ok("Todo Updated")
-            }.recover {
-              convertException
+              result match {
+                case t: Todo      => Ok(Json.toJson(t))
+                case e: Throwable => convertException(e)
+              }
             }
         }
     }.recoverTotal {
@@ -52,7 +55,7 @@ object TodoController extends Controller {
     }
   }
 
-  val convertException: PartialFunction[Throwable, Result] = {
+  def convertException(e: Throwable) = e match {
     case t: TimeoutException => InternalServerError(t.getMessage)
     case u                   => InternalServerError("Unknown server exception:" + u.getMessage)
   }
