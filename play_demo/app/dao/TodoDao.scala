@@ -27,7 +27,7 @@ object TodoDao {
       .map { result =>
         Todo(Some(id.stringify), todo.text, todo.done)
       }.recover {
-        case e: Throwable => e
+        case t: Throwable => throw t
       }
   }
 
@@ -38,7 +38,7 @@ object TodoDao {
       .map { result =>
         Todo(Some(id), todo.text, todo.done)
       }.recover {
-        case e: Throwable => e
+        case t: Throwable => throw t
       }
   }
 
