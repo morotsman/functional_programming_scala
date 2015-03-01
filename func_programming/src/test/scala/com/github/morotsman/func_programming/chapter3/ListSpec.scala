@@ -8,7 +8,7 @@ case class Apple() extends Fruit
     
 case class Orange() extends Fruit
 
-class NListSpec extends FlatSpec with Matchers {
+class ListSpec extends FlatSpec with Matchers {
 
   "List()" should "be equal to Nil" in {
     assert(List() == Nil)
@@ -103,8 +103,85 @@ class NListSpec extends FlatSpec with Matchers {
   
   "List(1,2,3).init()" should "result in List(1,2)" in {
     assert(List(1,2,3).init() == List(1,2))
+  }  
+   
+  
+  "List(1,2,3).foldRight(0)(_ + _)" should "result in 6" in {
+    assert(List(1,2,3).foldRight(0)(_ + _) == 6)
+  }   
+  
+  "List(1,2,3).foldRight(Nil:List[Int])(Cons(_,_))" should "result in List(1,2,3)" in {
+    assert(List(1,2,3).foldRight(Nil:List[Int])(Cons(_,_)) == List(1,2,3))
+  }   
+  
+  "List(1,2,3).foldRightInTermOfFoldLeft(0)(_ + _)" should "result in 6" in {
+    assert(List(1,2,3).foldRightInTermOfFoldLeft(0)(_ + _) == 6)
+  }   
+  
+  "List(1,2,3).foldRightInTermOfFoldLeft(Nil:List[Int])(Cons(_,_))" should "result in List(1,2,3)" in {
+    assert(List(1,2,3).foldRightInTermOfFoldLeft(Nil:List[Int])(Cons(_,_)) == List(1,2,3))
+  }     
+  
+  "List().length" should "result in 0" in {
+    assert(List().length == 0)
+  } 
+  
+  "List(1,2,3).length" should "result in 3" in {
+    assert(List(1,2,3).length == 3)
+  }  
+  
+  "List(1,2,3).foldLeft(0)(_ + _)" should "result in 6" in {
+    assert(List(1,2,3).foldLeft(0)(_ + _) == 6)
+  }   
+  
+  "List(1,2,3).foldLeft(Nil:List[Int])(Cons(_,_))" should "result in List(3,2,1)" in {
+    assert(List(1,2,3).foldLeft(Nil:List[Int])((acc,a) =>Cons(a,acc)) == List(3,2,1))
+  }  
+  
+  "List(1,2,3).foldLeftInTermOfFoldRight(0)(_ + _)" should "result in 6" in {
+    assert(List(1,2,3).foldLeftInTermOfFoldRight(0)(_ + _) == 6)
+  }   
+  
+  "List(1,2,3).foldLeftInTermOfFoldRight(Nil:List[Int])(Cons(_,_))" should "result in List(3,2,1)" in {
+    assert(List(1,2,3).foldLeftInTermOfFoldRight(Nil:List[Int])((acc,a) =>Cons(a,acc)) == List(3,2,1))
   }    
   
+  "List(1,2,3).reverse" should "result in List(3,2,1)" in {
+    assert(List(1,2,3).reverse == List(3,2,1))
+  }   
+  
+  "List().reverse" should "result in List()" in {
+    assert(List().reverse == List())
+  }  
+  
+  
+  "List().appendInTermsOfFoldLeft(List())" should "result in Nil" in {
+    assert(List().appendInTermsOfFoldLeft(List()) == Nil)
+  } 
+  
+  "List().appendInTermsOfFoldLeft(List(1,2))" should "result in List(1,2)" in {
+    assert(List().appendInTermsOfFoldLeft(List(1,2)) == List(1,2))
+  }
+  
+  "List(1,2).appendInTermsOfFoldLeft(List())" should "result in List(1,2)" in {
+    assert(List(1,2).appendInTermsOfFoldLeft(List()) == List(1,2))
+  }  
+  
+  "List(1,2).appendInTermsOfFoldLeft(List(3,4,5))" should "result in List(1,2,3,4,5)" in {
+    assert(List(1,2).appendInTermsOfFoldLeft(List(3,4,5)) == List(1,2,3,4,5))
+  }   
+  
+  "List.concat(List())" should "result in List(Nil)" in {
+    assert(List.concat(List()) == Nil)
+  }   
+  
+  "List.concat(List(List(1,2))" should "result in List(1,2)" in {
+    assert(List.concat(List(List(1,2))) == List(1,2))
+  }  
+  
+  "List.concat(List(List(1,2), List(3,4))" should "result in List(1,2,3,4)" in {
+    assert(List.concat(List(List(1,2),List(3,4))) == List(1,2,3,4))
+  }    
   
   
   

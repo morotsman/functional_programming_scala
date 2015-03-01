@@ -35,6 +35,43 @@ sealed trait List[+A] {
     case Nil => sys.error("not possible on empty list")
     case Cons(_,tl) => Cons(head,tl) 
   }
+  
+  def foldRight[B](z: B)(f: (A,B) => B): B = this match{
+    case Nil => z
+    case Cons(hd,tl) => f(hd, tl.foldRight(z)(f))
+  }
+  
+  def length2() : Int = this.foldRight(0)((_,acc) => acc + 1)
+  def length() : Int = this.foldLeft(0)((acc,_) => acc + 1)
+  
+  def foldLeft[B](z: B)(f: (B,A) => B): B = {
+    @annotation.tailrec
+    def go(as: List[A], acc: B):B = as match{
+      case Nil => acc
+      case Cons(hd,tl) => go(tl, f(acc, hd))
+    }
+    
+    go(this, z)   
+  }
+  
+  def reverse(): List[A] = 
+    this.foldLeft(Nil: List[A])((acc,a) => Cons(a,acc))
+    
+  def foldRightInTermOfFoldLeft[B](z: B)(f: (A,B) => B): B =
+    this.reverse.foldLeft(z)((a, acc) => f(acc,a))
+    
+  def foldLeftInTermOfFoldRight[B](z: B)(f: (B,A) => B): B = 
+    this.reverse.foldRight(z)((acc,a) => f(a,acc))  
+    
+  def appendInTermsOfFoldLeft[B >: A](a2: List[B]): List[B] = 
+    this.reverse.foldLeft(a2)((acc, a) => Cons(a,acc))
+    
+
+    
+    
+    
+ 
+  
 }
 
 case object Nil extends List[Nothing]
@@ -51,5 +88,22 @@ object List {
     case Nil         => 0
     case Cons(hd, tl) => hd + sum(tl)
   }
+  
+  def product(ints: List[Int]): Int = ints match {
+    case Nil         => 0
+    case Cons(hd, tl) => hd * sum(tl)
+  }  
+  
+  def product2(ints: List[Int]): Int = 
+    ints.foldRight(0)(_ * _)
+    
+  def sum2(ints: List[Int]): Int = 
+    ints.foldLeft(0)(_ + _)
+    
+  def product3(ints: List[Int]): Int = 
+    ints.foldLeft(1)(_ * _)
+    
+  def concat[A](l : List[List[A]]): List[A] = 
+    l.foldLeft(Nil:List[A])((acc,a) => acc.append(a))
 
 }
