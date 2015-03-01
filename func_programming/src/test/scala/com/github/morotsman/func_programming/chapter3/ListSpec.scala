@@ -181,7 +181,81 @@ class ListSpec extends FlatSpec with Matchers {
   
   "List.concat(List(List(1,2), List(3,4))" should "result in List(1,2,3,4)" in {
     assert(List.concat(List(List(1,2),List(3,4))) == List(1,2,3,4))
+  } 
+  
+  "List(1,2).map(_+10)" should "result in List(11,12)" in {
+    assert(List(1,2).map(_ + 10) == List(11,12))
+  }  
+  
+  "List(1,2).map(_+'')" should "result in List('11','12')" in {
+    assert(List(1,2).map(_ + "") == List("1","2"))
+  } 
+  
+  "List(1,2,3).filter(_!=2)" should "result in List(1,3)" in {
+    assert(List(1,2,3).filter(_ != 2) == List(1,3))
+  } 
+  
+  "List(1,2,3).filter2(_!=2)" should "result in List(1,3)" in {
+    assert(List(1,2,3).filter2(_ != 2) == List(1,3))
+  }     
+  
+  "List(1,2,3).filter3(_!=2)" should "result in List(1,3)" in {
+    assert(List(1,2,3).filter3(_ != 2) == List(1,3))
+  }  
+  
+  "List(1,2,3).filterInTermsOfFlatMap(_!=2)" should "result in List(1,3)" in {
+    assert(List(1,2,3).filterInTermsOfFlatMap(_ != 2) == List(1,3))
+  }     
+  
+  "List(1,2,3).flatMap(a => List(a,a)" should "result in List(1,1,2,2,3,3)" in {
+    assert(List(1,2,3).flatMap(a => List(a,a)) == List(1,1,2,2,3,3))
+  } 
+  
+  "List(1,2,3).zipWith(List(1,2))(_ + _)" should "result in List(2,4)" in {
+    assert(List(1,2,3).zipWith(List(1,2))(_ + _) == List(2,4))
+  }   
+  
+  "List(1,2).zipWith(List(1,2,3))(_ + _)" should "result in List(2,4)" in {
+    assert(List(1,2).zipWith(List(1,2,3))(_ + _) == List(2,4))
+  }  
+  
+  "List().hasSubsequence(List())" should "result in true" in {
+    assert(List().hasSubsequence(List()) == true)
+  }  
+  
+  "List(1).hasSubsequence(List(1))" should "result in true" in {
+    assert(List(1).hasSubsequence(List(1)) == true)
+  } 
+  
+  "List(1).hasSubsequence(List(1,2))" should "result in false" in {
+    assert(List(1).hasSubsequence(List(1,2)) == false)
   }    
+  
+  "List(1).hasSubsequence(List(2))" should "result in false" in {
+    assert(List(1).hasSubsequence(List(2)) == false)
+  }   
+  
+  "List(1,2).hasSubsequence(List(1))" should "result in true" in {
+    assert(List(1,2).hasSubsequence(List(1)) == true)
+  }  
+  
+  "List(1,2).hasSubsequence(List(2))" should "result in true" in {
+    assert(List(1,2).hasSubsequence(List(2)) == true)
+  }
+  
+  "List(1,2,3,4).hasSubsequence(List(2,3))" should "result in true" in {
+    assert(List(1,2,3,4).hasSubsequence(List(2,3)) == true)
+  } 
+  
+  "List(1,2,3,4).hasSubsequence(List(3,4))" should "result in true" in {
+    assert(List(1,2,3,4).hasSubsequence(List(3,4)) == true)
+  }   
+  
+  "List(1,2,3,4).hasSubsequence(List(2,4))" should "result in false" in {
+    assert(List(1,2,3,4).hasSubsequence(List(2,4)) == false)
+  }  
+  
+  
   
   
   
