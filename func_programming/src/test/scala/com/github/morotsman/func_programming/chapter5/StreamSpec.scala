@@ -111,7 +111,28 @@ class StreamSpec  extends FlatSpec with Matchers{
   
   "Stream(1,2,3).takeWhile2(_ < 1)" should "result in Stream()" in {
     assert(Stream(1,2,3).takeWhile2(_ < 1).toList == List())
+  }   
+  
+  "Stream(1,2,3).map(_ + 1)" should "result in Stream(2,3,4)" in {
+    assert(Stream(1,2,3).map(_ + 1).toList == List(2,3,4))
+  }   
+  
+  "Stream().map(_ + 1)" should "result in Stream()" in {
+    assert((Stream(): Stream[Int]).map(_ + 1).toList == List())
+  }   
+  
+  "Stream(1,2,3).filter(_ < 3)" should "result in Stream(1,2)" in {
+    assert(Stream(1,2,3).filter(_ < 3).toList == List(1,2))
+  }   
+  
+  "Stream().filter(_ == 1)" should "result in Stream()" in {
+    assert((Stream(): Stream[Int]).filter(_ == 1).toList == List())
   }    
+  
+  
+  "test" should "result in Stream()" in {
+    println("Result: " + Stream(1,2,3,4).map( a => {println(a + 10);a + 10}).filter(a => {println(a % 2 == 0); a % 2 == 0}).toList)
+  } 
   
   
 

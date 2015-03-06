@@ -36,6 +36,9 @@ sealed trait Stream[+A] {
     case _ => z
   }
   
+  def map[B](f: A => B): Stream[B] = 
+    this.foldRight(Empty: Stream[B])((a,b) => Cons(() => f(a), () => b))
+  
   def headOption: Option[A] = this match {
     case Empty => None
     case Cons(h, t) => Some(h())
@@ -52,6 +55,9 @@ sealed trait Stream[+A] {
     
   def takeWhile2(p: A => Boolean): Stream[A] =
     foldRight(Empty: Stream[A])((a, b) => if(p(a)) Cons(() => a, () => b) else Empty)
+    
+  def filter(p: A => Boolean): Stream[A] = 
+    foldRight(Empty: Stream[A])((a, b) => if(p(a)) Cons(() => a, () => b) else b)
 
 }
 
