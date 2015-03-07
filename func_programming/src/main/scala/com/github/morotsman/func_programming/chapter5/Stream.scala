@@ -14,8 +14,8 @@ sealed trait Stream[+A] {
   }
   
   def take(n: Int): Stream[A] = this match {
-    case Cons(hd,tl) if n > 1 => Cons(hd, () => tl().take(n-1))
-    case Cons(hd, tl) => Cons(hd, () => Empty)
+    case Cons(hd,tl) if n > 0 => Cons(hd, () => tl().take(n-1))
+    case Cons(hd, tl) if n == 0 => Empty
     case _ => Empty
   }
   
@@ -58,6 +58,18 @@ sealed trait Stream[+A] {
     
   def filter(p: A => Boolean): Stream[A] = 
     foldRight(Empty: Stream[A])((a, b) => if(p(a)) Cons(() => a, () => b) else b)
+    
+  def append[B >: A](s: => Stream[B]): Stream[B] = 
+    foldRight(s)((a, b) => Cons(() => a, () => b))
+    
+  def flatMap[B](f: A => Stream[B]): Stream[B] = 
+    foldRight(Empty: Stream[B])((a, b) => f(a).append(b))
+    
+  def find(p: A => Boolean): Option[A] = 
+    filter(p).headOption
+    
+    
+    
 
 }
 
@@ -77,6 +89,23 @@ object Stream {
   
   def apply[A](as: A*): Stream[A] = 
     if(as.isEmpty) empty else cons(as.head, apply(as.tail: _*))
+    
+  def ones: Stream[Int] = cons(1, ones)
   
+  def constant[A](implicit a: A): Stream[A] = 
+    cons(a, constant)
+    
+  def from(n: Int): Stream[Int] = 
+    cons(n , from(n+1))
+  
+  def fibs: Stream[Int] = {
+    def go(a: Int,b: Int): Stream[Int] = {
+       cons(a+b, go(b,a+b)) 
+    } 
+    
+    cons(0, cons(1,go(0,1)))
+      
+  }
+    
   
 }
