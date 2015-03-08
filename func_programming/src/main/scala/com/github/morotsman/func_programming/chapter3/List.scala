@@ -105,17 +105,17 @@ sealed trait List[+A] {
     
     if(this == Nil && sub == Nil) return true
     
-    def compare(ls: List[A], sub: List[B]): Boolean = (ls, sub) match{
+    def startsWith(ls: List[A], sub: List[B]): Boolean = (ls, sub) match{
       case (Nil, Nil) => true
       case (Nil,_) => false
       case (_, Nil) => true
-      case (Cons(hd1,tl1), Cons(hd2,tl2)) if hd1==hd2 => compare(tl1,tl2) 
+      case (Cons(hd1,tl1), Cons(hd2,tl2)) if hd1==hd2 => startsWith(tl1,tl2) 
       case _ => false
     }
     
     def loop(ls: List[A]): Boolean = ls match {
       case Nil => false
-      case Cons(_, _) if compare(ls, sub) => true
+      case Cons(_, _) if startsWith(ls, sub) => true
       case Cons(_, tl) => loop(tl)
     }
     

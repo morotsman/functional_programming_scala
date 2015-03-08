@@ -207,6 +207,169 @@ class StreamSpec  extends FlatSpec with Matchers{
   } 
   
   
+  "Stream.onesInTermsOfUnfold.take(5)" should "result in Stream(1,1,1,1,1)" in {
+    assert(Stream.onesInTermsOfUnfold.take(5).toList == List(1,1,1,1,1))
+  }
+  
+  "Stream.onesInTermsOfUnfold2.take(5)" should "result in Stream(1,1,1,1,1)" in {
+    assert(Stream.onesInTermsOfUnfold2.take(5).toList == List(1,1,1,1,1))
+  }    
+  
+  "Stream.constantInTermsOfUnfold('a').take(5)" should "result in Stream('a','a','a','a','a')" in {
+    assert(Stream.constantInTermsOfUnfold("a").take(5).toList == List("a", "a", "a", "a", "a"))
+  }  
+  
+  "Stream.constantInTermsOfUnfold('a').take(0)" should "result in Stream()" in {
+    assert(Stream.constantInTermsOfUnfold("a").take(1).toList == List("a"))
+  }   
+  
+  "Stream.fromInTermsOfUnfold(2).take(0)" should "result in Stream()" in {
+    assert(Stream.fromInTermsOfUnfold(2).take(0).toList == List())
+  }  
+  
+  "Stream.fromInTermsOfUnfold(2).take(3)" should "result in Stream(2,3,4)" in {
+    assert(Stream.fromInTermsOfUnfold(2).take(3).toList == List(2,3,4))
+  } 
+  
+  "Stream.fibsInTermsOfUnfold.take(7)" should "result in Stream(0,1,1,2,3,5,8)" in {
+    assert(Stream.fibs.take(7).toList == List(0,1,1,2,3,5,8))
+  }   
+  
+  
+  "Stream(1,2,3).mapInTermsOfUnfold(_ + 1)" should "result in Stream(2,3,4)" in {
+    assert(Stream(1,2,3).mapInTermsOfUnfold(_ + 1).toList == List(2,3,4))
+  }   
+  
+  "Stream().mapInTermsOfUnfold(_ + 1)" should "result in Stream()" in {
+    assert((Stream(): Stream[Int]).mapInTermsOfUnfold(_ + 1).toList == List())
+  }   
+  
+  
+  "Stream().takeInTermsOfUnfold(1)" should "result in Empty" in {
+    assert(Stream().takeInTermsOfUnfold(1) == Empty)
+  }
+  
+  "Stream(1).takeInTermsOfUnfold(0)" should "result in Stream()" in {
+    assert(Stream(1).takeInTermsOfUnfold(0).toList == List())
+  }    
+  
+  "Stream(1).takeInTermsOfUnfold(1)" should "result in Stream(1)" in {
+    assert(Stream(1).takeInTermsOfUnfold(1).toList == List(1))
+  }   
+  
+  "Stream(1,2,3).takeInTermsOfUnfold(1)" should "result in Stream(1)" in {
+    assert(Stream(1,2,3).takeInTermsOfUnfold(1).toList == List(1))
+  } 
+  
+  "Stream(1,2,3).takeInTermsOfUnfold(3)" should "result in Stream(1,2,3)" in {
+    assert(Stream(1,2,3).takeInTermsOfUnfold(3).toList == List(1,2,3))
+  }  
+  
+  "Stream(1,2,3).takeInTermsOfUnfold(4)" should "result in Stream(1,2,3)" in {
+    assert(Stream(1,2,3).takeInTermsOfUnfold(4).toList == List(1,2,3))
+  } 
+  
+  
+  
+  "Stream(1,2,3).takeWhileInTermsOfUnfold(_ < 2)" should "result in Stream(1)" in {
+    assert(Stream(1,2,3).takeWhileInTermsOfUnfold(_ < 2).toList == List(1))
+  }  
+  
+  "Stream().takeWhileInTermsOfUnfold(_ < 2)" should "result in Stream()" in {
+    assert((Stream():Stream[Int]).takeWhileInTermsOfUnfold(_ < 2).toList == List())
+  } 
+  
+  "Stream(1,2,3).takeWhileInTermsOfUnfold(_ < 4)" should "result in Stream(1,2,3)" in {
+    assert(Stream(1,2,3).takeWhileInTermsOfUnfold(_ < 4).toList == List(1,2,3))
+  }   
+  
+  "Stream(1,2,3).takeWhileInTermsOfUnfold(_ < 1)" should "result in Stream()" in {
+    assert(Stream(1,2,3).takeWhileInTermsOfUnfold(_ < 1).toList == List())
+  }  
+  
+  
+  
+  
+  "Stream(1,2,3).zipWith(Stream(4,5,6))(_ + _)" should "result in Stream(5,7,9)" in {
+    assert(Stream(1,2,3).zipWith(Stream(4,5,6))(_ + _).toList == List(5,7,9))
+  }  
+  
+  "Stream(1,2,3).zipWith(Stream(4,5))(_ + _)" should "result in Stream(5,7)" in {
+    assert(Stream(1,2,3).zipWith(Stream(4,5))(_ + _).toList == List(5,7))
+  } 
+  
+  "Stream(1,2,3).zipWith(Stream())(_ + _)" should "result in Stream()" in {
+    assert(Stream(1,2,3).zipWith(Stream())(_ + _).toList == List())
+  }
+  
+  "Stream(1,2).zipWith(Stream(4,5,6))(_ + _)" should "result in Stream(5,7)" in {
+    assert(Stream(1,2).zipWith(Stream(4,5,6))(_ + _).toList == List(5,7))
+  }    
+  
+  "Stream().zipWith(Stream(4,5,6))(_ + _)" should "result in Stream()" in {
+    assert((Stream(): Stream[Int]).zipWith(Stream(4,5,6))(_ + _).toList == List())
+  }    
+  
+  
+  
+  "Stream(1,2,3).zipAll(Stream(4,5,6))" should "result in Stream((Some(1), Some(4)), (Some(2), Some(5)), (Some(3), Some(6)))" in {
+    assert(Stream(1,2,3).zipAll(Stream(4,5,6)).toList == List((Some(1), Some(4)), (Some(2), Some(5)), (Some(3), Some(6))))
+  }  
+  
+  "Stream(1,2,3).zipAll(Stream(4,5))" should "result in Stream((Some(1), Some(4)), (Some(2), Some(5)), (Some(3), None))" in {
+    assert(Stream(1,2,3).zipAll(Stream(4,5)).toList == List((Some(1), Some(4)), (Some(2), Some(5)), (Some(3), None)))
+  } 
+  
+  "Stream(1,2,3).zipAll(Stream())" should "result in Stream((Some(1), None), (Some(2), None), (Some(3), None))" in {
+    assert(Stream(1,2,3).zipAll(Stream()).toList == List((Some(1), None), (Some(2), None), (Some(3), None)))
+  }     
+  
+  "Stream(1,2).zipAll(Stream(4,5,6))" should "result in Stream((Some(1), Some(4)), (Some(2), Some(5)), (None, Some(6)))" in {
+    assert(Stream(1,2).zipAll(Stream(4,5,6)).toList == List((Some(1), Some(4)), (Some(2), Some(5)), (None, Some(6))))
+  } 
+  
+  "Stream().zipAll(Stream(4,5,6))" should "result in Stream((None, Some(4)), (None, Some(5)), (None, Some(6)))" in {
+    assert(Stream().zipAll(Stream(4,5,6)).toList == List((None, Some(4)), (None, Some(5)), (None, Some(6))))
+  }    
+  
+  "Stream().zipAll(Stream())" should "result in Stream()" in {
+    assert(Stream().zipAll(Stream()).toList == List())
+  } 
+  
+  "Stream(1,2,3).startsWith(Stream(1))" should "result in true" in {
+    assert(Stream(1,2,3).startsWith(Stream(1)) == true)
+  }   
+  
+  "Stream(1,2,3).startsWith(Stream())" should "result in true" in {
+    assert(Stream(1,2,3).startsWith(Stream()) == true)
+  } 
+  
+  "Stream(1,2,3).startsWith(Stream(1,2,3))" should "result in true" in {
+    assert(Stream(1,2,3).startsWith(Stream(1,2,3)) == true)
+  }  
+  
+  "Stream(1,2,3).startsWith(Stream(1,3))" should "result in false" in {
+    assert(Stream(1,2,3).startsWith(Stream(1,3)) == false)
+  }  
+  
+  "Stream(1,2).startsWith(Stream(1,2,3))" should "result in false" in {
+    assert(Stream(1,2).startsWith(Stream(1,2,3)) == false)
+  }  
+  
+  
+  "Stream(1,2,3).tails" should "result in Stream(Stream(1,2,3), Stream(2,3), Stream(3))" in {
+    assert(Stream(1,2,3).tails.map(s => s.toList).toList == List(List(1, 2, 3), List(2, 3), List(3), List()))
+  } 
+  
+  "Stream().tails" should "result in Stream()" in {
+    assert(Stream().tails.map(s => s.toList).toList == List(List()))
+  }   
+
+  
+  
+  
+  
+  
 
   
 }
