@@ -47,5 +47,45 @@ object Par{
       val fbs: List[Par[B]] = ps.map(asyncF(f))
       sequence(fbs)
     }
+    
+  def parFilter[A](as: List[A])(f: A => Boolean): Par[List[A]] = {
+    val tmp = as.map(asyncF(x => if(f(x)) List(x) else Nil))
+    map(sequence(tmp))(_.flatMap { identity})
+  }
+  
+  
+  def sum(ints: IndexedSeq[Int]): Par[Int] = 
+    if(ints.size <= 1)
+      Par.unit(ints.headOption.getOrElse(0))
+    else {
+      val (l, r) = ints.splitAt(ints.length/2)
+      Par.map2(sum(l), sum(r))(_ + _)
+    }
+  
+  def reduce[A](z: A)(s: IndexedSeq[A])(f: (A, A) => A): Par[A] = 
+     if(s.size <= 1)
+      Par.unit(s.headOption.getOrElse(z))
+    else {
+      val (l, r) = s.splitAt(s.length/2)
+      Par.map2(reduce(z)(l)(f), reduce(z)(r)(f))(f(_,_))
+    }  
+  
+   
+  
+  
+  def sum2(ints: IndexedSeq[Int]): Par[Int] =
+    reduce(0)(ints)(_+_)
+    
+    
+  def map3[A,B,C,D](a: => Par[A], b: => Par[B], c: => Par[C])(f: (A, B, C) => D): Par[D] = {
+    map2(map2(a, b)((a,b) => (a,b)), c)((a_b, c) => f(a_b._1, a_b._2, c)) 
+  }
+  
+  def map4[A,B,C,D, E](a: => Par[A], b: => Par[B], c: => Par[C], d: => Par[D])(f: (A, B, C, D) => E): Par[E] = {
+    map2(map3(a, b, c)((a,b,c) => (a,b,c)), d)((a_b_c,d) => f(a_b_c._1, a_b_c._2, a_b_c._3, d)) 
+  }  
+    
+    
+    
   
 }

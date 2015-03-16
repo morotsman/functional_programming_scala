@@ -34,7 +34,16 @@ class ParSpec  extends FlatSpec with Matchers{
   
   "parMap(List(1,2,3))(_*10)" should "result in List(10,20,30)" in {
     assert(parMap(List(1,2,3))(_*10)(es).get == List(10,20,30))
-  }   
+  }  
+  
+  "parFilter(List(1,2,3))(_<3)" should "result in List(1,2)" in {
+    assert(parFilter(List(1,2,3))(_<3)(es).get == List(1,2))
+  }  
+  
+  "max(List(1,2,3))(_<3)" should "result in 3" in {
+    val list = List(1,2,3);
+    assert(reduce(list.head)(list.toIndexedSeq)((a, b) => if(a < b) b else a)(es).get == 3)
+  }    
   
 
   
