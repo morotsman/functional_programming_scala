@@ -84,6 +84,54 @@ object Par{
   def map4[A,B,C,D, E](a: => Par[A], b: => Par[B], c: => Par[C], d: => Par[D])(f: (A, B, C, D) => E): Par[E] = {
     map2(map3(a, b, c)((a,b,c) => (a,b,c)), d)((a_b_c,d) => f(a_b_c._1, a_b_c._2, a_b_c._3, d)) 
   }  
+  
+  def choice[A](cond: Par[Boolean])(t: Par[A], f: Par[A]): Par[A] = 
+    es => 
+      if(run(es)(cond).get) t(es)
+      else f(es)
+      
+  def choiceN[A](n: Par[Int])(choices: List[Par[A]]): Par[A] = 
+    es => {
+      val i = run(es)(n).get
+      choices(i)(es)
+    }
+    
+  def choiceInTermsOfChoiceN[A](cond: Par[Boolean])(t: Par[A], f: Par[A]): Par[A] = 
+    choiceN(map(cond)(b => if(b) 0 else 1))(List(t,f))
+    
+  def choiceMap[K,V](key: Par[K])(choices: Map[K, Par[V]]): Par[V] = 
+    es => {
+      val k = run(es)(key).get
+      choices(k)(es)
+    }
+    
+  def chooser[C,V](ch: Par[C])(choices: C => Par[V]): Par[V] = 
+    es => {
+      val c = run(es)(ch).get
+      choices(c)(es)
+    }
+    
+  def choiceInTermsOfChooser[A](cond: Par[Boolean])(t: Par[A], f: Par[A]): Par[A] =
+    chooser(cond)(b => if(b) t else f)
+    
+  def choiceNInTermsOfChooser[A](n: Par[Int])(choices: List[Par[A]]): Par[A] =
+    chooser(n)(i => choices(i))
+    
+  def flatMap[A, B](a: Par[A])(f: A => Par[B]): Par[B] = 
+    es => {
+      val a_v = run(es)(a).get
+      f(a_v)(es)
+    }
+         
+  def join[A](a: Par[Par[A]]): Par[A] = 
+    es => a(es).get()(es)
+    
+  def flatMapInTermsOfJoin[A, B](a: Par[A])(f: A => Par[B]): Par[B] = 
+    join(map(a)(f(_)))
+    
+  def joinInTermsOfFlatMap[A](a: Par[Par[A]]): Par[A] =
+    flatMap(a)(v => v)
+      
     
     
     

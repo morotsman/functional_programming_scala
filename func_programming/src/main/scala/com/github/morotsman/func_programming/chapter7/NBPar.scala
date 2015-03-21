@@ -66,6 +66,8 @@ object NBPar {
   def map[A, B](pa: NBPar[A])(f: A => B): NBPar[B] = 
     map2(pa, unit(()))((a,_) => f(a))
     
+ 
+    
     def sequenceBalanced[A](as: IndexedSeq[NBPar[A]]): NBPar[IndexedSeq[A]] = fork {
       if (as.isEmpty) unit(Vector())
       else if (as.length == 1) map(as.head)(a => Vector(a))
