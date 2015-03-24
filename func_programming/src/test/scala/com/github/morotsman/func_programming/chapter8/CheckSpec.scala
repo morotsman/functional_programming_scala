@@ -157,6 +157,75 @@ class CheckSpec  extends FlatSpec with Matchers{
     assert(result.exists { x => x == 2 })
     assert(result.forall { x => x == 1 || x == 2 })
     assert(result.filter(_ == 1).size == 248)//should be near 250
+  }  
+  
+  
+  "42" should "equal 42" in { 
+    val rng: RNG = SimpleRNG(10)
+    val generator = Gen.unit(42);
+    val prop = Prop.forAll(generator)(a => a == 42)
+    val result = prop.run(1,1,rng)
+    assert(result == Prop.Passed)
+  }    
+  
+  
+  "42" should "should not equal 43" in { 
+    val rng: RNG = SimpleRNG(10)
+    val generator = Gen.unit(42);
+    val prop = Prop.forAll(generator)(a => a == 43)
+    val result = prop.run(1,1,rng)
+    assert(result == Prop.Falsified(List("42"), 0))
+  }  
+  
+  
+  "42 || 43" should "should pass 42 or 43" in { 
+    val rng: RNG = SimpleRNG(10)
+    val generator = Gen.unit(42);
+    val prop = Prop.forAll(generator)(a => a == 42) || Prop.forAll(generator)(a => a == 43)
+    val result = prop.run(1,1,rng)
+    assert(result == Prop.Passed)
+  }    
+  
+  "43 || 42" should "should pass 42 or 43" in { 
+    val rng: RNG = SimpleRNG(10)
+    val generator = Gen.unit(42);
+    val prop = Prop.forAll(generator)(a => a == 43) || Prop.forAll(generator)(a => a == 42)
+    val result = prop.run(1,1,rng)
+    assert(result == Prop.Passed)
+  }  
+  
+  "43 || 42" should "should fail 44" in { 
+    val rng: RNG = SimpleRNG(10)
+    val generator = Gen.unit(44);
+    val prop = Prop.forAll(generator)(a => a == 43) || Prop.forAll(generator)(a => a == 42)
+    val result = prop.run(1,1,rng)
+    assert(result == Prop.Falsified(List("44","44"), 0))
+  }    
+  
+  "true and true" should "should pass" in { 
+    val rng: RNG = SimpleRNG(10)
+    val trueGenerator = Gen.unit(true);
+    val prop = Prop.forAll(trueGenerator)(a => a ) && Prop.forAll(trueGenerator)(a => a)
+    val result = prop.run(1,1,rng)
+    assert(result == Prop.Passed)
+  }   
+  
+  "true and false" should "should be falsified" in { 
+    val rng: RNG = SimpleRNG(10)
+    val trueGenerator = Gen.unit(true);
+    val falseGenerator = Gen.unit(false);
+    val prop = Prop.forAll(trueGenerator)(a => a ) && Prop.forAll(falseGenerator)(a => a)
+    val result = prop.run(1,1,rng)
+    assert(result == Prop.Falsified(List("false"), 0))
+  }   
+  
+  "false and true" should "should be falsified" in { 
+    val rng: RNG = SimpleRNG(10)
+    val trueGenerator = Gen.unit(true);
+    val falseGenerator = Gen.unit(false);
+    val prop = Prop.forAll(falseGenerator)(a => a ) && Prop.forAll(trueGenerator)(a => a)
+    val result = prop.run(1,1,rng)
+    assert(result == Prop.Falsified(List("false"), 0))
   }   
   
   
