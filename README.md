@@ -1,6 +1,7 @@
 scala
 =====
-Random scala stuff
+
+Solutions for https://www.manning.com/books/functional-programming-in-scala
 
 
 game_of_life has moved to: https://github.com/morotsman/game_of_life
