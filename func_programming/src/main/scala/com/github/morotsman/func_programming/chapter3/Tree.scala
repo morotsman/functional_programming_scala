@@ -6,33 +6,34 @@ sealed trait Tree[+A] {
   
   def size(): Int = this match {
     case Leaf(_) => 1
-    case Branch(l,r) => 1 + r.size() + l.size()
-  } 
+    case Branch(left,right) => 1 + left.size + right.size
+  }
   
   def depth(): Int = this match {
     case Leaf(_) => 1
-    case Branch(l,r) => 1 + (l.depth() max r.depth)
-  } 
+    case Branch(left,right) => 1 + left.depth.max(right.depth)
+     
+  }
   
-  def map[B](f: A=>B): Tree[B] = this match{
-    case Leaf(v) => Leaf(f(v))
-    case Branch(l,r) => Branch(l.map(f),r.map(f)) 
+  def map[B](f: A=>B): Tree[B] = this match {
+    case Leaf(v) => Leaf(f(v))  
+    case Branch(left,right) => Branch(left.map(f),right.map(f))
   }
   
   def fold[B](f: A => B)(g: (B,B) => B): B = this match {
     case Leaf(v) => f(v)
-    case Branch(l,r) => g(l.fold(f)(g), r.fold(f)(g))
+    case Branch(left,right) => g(left.fold(f)(g),right.fold(f)(g))  
   }
   
-  def sizeInTermsOfFold(): Int = 
-    this.fold(_ => 1)(1 + _ + _)
+  def sizeInTermsOfFold(): Int =
+    this.fold(v => 1)(1 + _ + _)
     
   def depthInTermsOfFold(): Int = 
-    this.fold(_ => 1)((l,r) => 1 + (l max r))
+    this.fold(v => 1)(1 + _.max(_))
     
     
   def mapInTermsOfFold[B](f: A=>B): Tree[B] = 
-    this.fold(v => Leaf(f(v)): Tree[B])((l,r) => Branch(l,r))
+    this.fold(v => Leaf(f(v)) :Tree[B])((l,r) => Branch(l,r))
     
   
   
@@ -44,12 +45,16 @@ case class Branch[A](left: Tree[A], right: Tree[A]) extends Tree[A]
 
 object Tree {
   
-  def maximum(ls: Tree[Int]): Int = ls match{
-    case Leaf(v) => v
-    case Branch(l,r) => maximum(l) max maximum(r)
+  def maximum(ls: Tree[Int]): Int = ls match {
+    case Leaf(v) => v  
+    case Branch(left,right) => {
+      val maxLeft = maximum(left)
+      val maxRight = maximum(right)
+      maxLeft.max(maxRight)
+    }
   }
   
-  def maximumInTermsOfFold(ls: Tree[Int]): Int =
-    ls.fold(v => v)((l,r) => l max r)
+  def maximumInTermsOfFold(ls: Tree[Int]): Int = 
+    ls.fold(v => v)(_.max(_))
 
 }
