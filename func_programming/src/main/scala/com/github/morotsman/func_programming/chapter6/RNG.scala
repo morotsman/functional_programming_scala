@@ -118,7 +118,6 @@ object RNG {
       if (i + (n - 1) - mod >= 0) {
         unit(mod)
       } else {
-        println("Kommmer hit")
         nonNegativeLessThan(n)
       }
     })
