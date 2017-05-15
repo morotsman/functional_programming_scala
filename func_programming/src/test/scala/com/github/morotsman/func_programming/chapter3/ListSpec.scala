@@ -99,6 +99,7 @@ class ListSpec extends FlatSpec with Matchers {
     assert(List(1,2).append(List(3,4,5)) == List(1,2,3,4,5))
   }  
   
+  
   "List().init()" should "result in Nil" in {
     assert(List().init() == Nil)
   }   
@@ -162,7 +163,24 @@ class ListSpec extends FlatSpec with Matchers {
   
   "List(1,2,3).reverse" should "result in List(3,2,1)" in {
     assert(List(1,2,3).reverse == List(3,2,1))
+  }  
+  
+  "List().foldLeftInTermOfFoldRight(0)(_ + _)" should "result in 0" in {
+    assert(List(1,2,3).foldLeftInTermOfFoldRight(0)(_ + _) == 6)
+  } 
+  
+  "List(2).foldLeftInTermOfFoldRight(0)(_ + _)" should "result in 2" in {
+    assert(List(2).foldLeftInTermOfFoldRight(0)(_ + _) == 2)
   }   
+  
+  "List(1,2,3).foldLeftInTermOfFoldRight(0)(_ + _)" should "result in 6" in {
+    assert(List(1,2,3).foldLeftInTermOfFoldRight(0)(_ + _) == 6)
+  }   
+  
+  "List(1,2,3).foldLeftInTermOfFoldRight(Nil:List[Int])(Cons(_,_))" should "result in List(3,2,1)" in {
+    assert(List(1,2,3).foldLeftInTermOfFoldRight(Nil:List[Int])((acc,a) =>Cons(a,acc)) == List(3,2,1))
+  }     
+  
   
   "List().foldRightInTermOfFoldLeft(0)(_ + _)" should "result in 0" in {
     assert(List().foldRightInTermOfFoldLeft(0)((x:Int,y:Int) => x + y) == 0)
@@ -180,21 +198,6 @@ class ListSpec extends FlatSpec with Matchers {
     assert(List(1,2,3).foldRightInTermOfFoldLeft(Nil:List[Int])(Cons(_,_)) == List(1,2,3))
   }  
   
-  "List().foldLeftInTermOfFoldRight(0)(_ + _)" should "result in 0" in {
-    assert(List(1,2,3).foldLeftInTermOfFoldRight(0)(_ + _) == 6)
-  } 
-  
-  "List(2).foldLeftInTermOfFoldRight(0)(_ + _)" should "result in 2" in {
-    assert(List(2).foldLeftInTermOfFoldRight(0)(_ + _) == 2)
-  }   
-  
-  "List(1,2,3).foldLeftInTermOfFoldRight(0)(_ + _)" should "result in 6" in {
-    assert(List(1,2,3).foldLeftInTermOfFoldRight(0)(_ + _) == 6)
-  }   
-  
-  "List(1,2,3).foldLeftInTermOfFoldRight(Nil:List[Int])(Cons(_,_))" should "result in List(3,2,1)" in {
-    assert(List(1,2,3).foldLeftInTermOfFoldRight(Nil:List[Int])((acc,a) =>Cons(a,acc)) == List(3,2,1))
-  }   
   
   "List().appendInTermsOfFoldLeft(List())" should "result in Nil" in {
     assert(List().appendInTermsOfFoldLeft(List()) == Nil)
@@ -211,6 +214,7 @@ class ListSpec extends FlatSpec with Matchers {
   "List(1,2).appendInTermsOfFoldLeft(List(3,4,5))" should "result in List(1,2,3,4,5)" in {
     assert(List(1,2).appendInTermsOfFoldLeft(List(3,4,5)) == List(1,2,3,4,5))
   }     
+  
   
   "List.concat(List())" should "result in Nil" in {
     assert(List.concat(List()) == Nil)
@@ -246,6 +250,7 @@ class ListSpec extends FlatSpec with Matchers {
     
   } 
   
+  
   "List(0).mapInTermsOfFoldLeft(_+10)" should "result in Nil" in {
     assert(List().mapInTermsOfFoldLeft((x:Int) => x + 10) == Nil)
   }
@@ -261,7 +266,8 @@ class ListSpec extends FlatSpec with Matchers {
   "List(1,2).mapInTermsOfFoldLeft(_+'')" should "result in List('11','12')" in {
     assert(List(1,2).mapInTermsOfFoldLeft(_ + "") == List("1","2")) 
   }
- 
+
+  
   "List().filter(_!=2)" should "result in Nil" in {
     assert(List().filter(_ != 2) == List())
   } 
@@ -278,8 +284,7 @@ class ListSpec extends FlatSpec with Matchers {
   "List(1,2,3).filter(_!=2)" should "result in List(1,3)" in {
     assert(List(1,2,3).filter(_ != 2) == List(1,3))
   } 
-  
-  
+   
   "List().filterInTermsOfFoldLeft(_!=2)" should "result in Nil" in {
     assert(List().filterInTermsOfFoldLeft(_ != 2) == List())
   } 
@@ -296,6 +301,7 @@ class ListSpec extends FlatSpec with Matchers {
   "List(1,2,3).filterInTermsOfFoldLeft(_!=2)" should "result in List(1,3)" in {
     assert(List(1,2,3).filterInTermsOfFoldLeft(_ != 2) == List(1,3))
   }   
+  
   
   "List().flatMap(a => List(a,a)" should "result in Nil" in {
     assert(List().flatMap(a => List(a,a)) == List())
@@ -327,6 +333,7 @@ class ListSpec extends FlatSpec with Matchers {
     assert(List(1,2,3).filterInTermsOfFlatMap(_ != 2) == List(1,3))
   }  
   
+  
   "List(1,2,3).zipWith(List(1,2))(_ + _)" should "result in List(2,4)" in {
     assert(List(1,2,3).zipWith(List(1,2))(_ + _) == List(2,4))
   }   
@@ -341,7 +348,36 @@ class ListSpec extends FlatSpec with Matchers {
   
   "List(1,2).zipWith(List())(_ + _)" should "result in List()" in {
     assert(List(1,2).zipWith(List[Int]())(_ + _) == List())
-  }      
+  }   
+  
+  "List(1,2).forAll(_<3)" should "result in true" in {
+    assert(List(1,2).forAll(_<3) == true)
+  }  
+  
+  "List(1,2).forAll(_<2)" should "result in false" in {
+    assert(List(1,2).forAll(_<2) == false)
+  }    
+  
+  "List(1,2).startsWith(List(1))" should "result in true" in {
+    assert(List(1,2).startsWith(List(1)) == true)
+  }  
+  
+  "List(1,2).startsWith(List(1,2))" should "result in true" in {
+    assert(List(1,2).startsWith(List(1,2)) == true)
+  } 
+  
+  "List(1,2).startsWith(List(1,2,3))" should "result in false" in {
+    assert(List(1,2).startsWith(List(1,2,3)) == false)
+  }     
+  
+  "List(1,2).startsWith(List(2))" should "result in false" in {
+    assert(List(1,2).startsWith(List(2)) == false)
+  }   
+  
+  "List().startsWith(List(1))" should "result in false" in {
+    assert(List().startsWith(List(1)) == false)
+  }    
+  
   
   
   "List().hasSubsequence(List())" should "result in true" in {
@@ -399,6 +435,8 @@ class ListSpec extends FlatSpec with Matchers {
   "List(1,2,3,4).hasSubsequence(List(2,4))" should "result in false" in {
     assert(List(1,2,3,4).hasSubsequence(List(2,4)) == false)
   }  
+  
+ 
   
   
   
