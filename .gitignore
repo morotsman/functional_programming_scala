@@ -3,3 +3,5 @@ target/
 .cache
 .classpath
 .project
+func_programming/.cache-main
+func_programming/.cache-tests

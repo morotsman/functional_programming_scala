@@ -28,6 +28,7 @@ class TreeSpec  extends FlatSpec with Matchers{
     assert(Tree.maximum(Branch(Leaf(1),Branch(Leaf(2), Leaf(4)))) == 4)
   }    
   
+  
   "Branch(Leaf(1),Branch(Leaf(2), Leaf(4))).depth" should "result in 3" in {
     assert(Branch(Leaf(1),Branch(Leaf(2), Leaf(4))).depth == 3)
   } 
@@ -51,7 +52,7 @@ class TreeSpec  extends FlatSpec with Matchers{
   "Branch(Leaf(1),Leaf(2)).sizeInTermsOfFold()" should "result in 3" in {
     assert(Branch(Leaf(1), Leaf(2)).sizeInTermsOfFold == 3)
   } 
-  
+  /*
   "Branch(Leaf(1),Branch(Leaf(2), Leaf(4))).depthInTermsOfFold" should "result in 3" in {
     assert(Branch(Leaf(1),Branch(Leaf(2), Leaf(4))).depthInTermsOfFold == 3)
   } 
@@ -83,6 +84,8 @@ class TreeSpec  extends FlatSpec with Matchers{
   "Branch(Leaf(1),Branch(Leaf(2), Leaf(4))).mapInTermsOfFold(_ + 10)" should "result in Branch(Leaf(11),Branch(Leaf(12), Leaf(14)))" in {
     assert(Branch(Leaf(1),Branch(Leaf(2), Leaf(4))).mapInTermsOfFold(_ + 10) == Branch(Leaf(11),Branch(Leaf(12), Leaf(14))))
   }   
+  
+  */
   
 }
 

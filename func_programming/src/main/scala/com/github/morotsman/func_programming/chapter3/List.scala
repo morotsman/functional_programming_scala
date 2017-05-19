@@ -124,7 +124,15 @@ sealed trait List[+A] {
   }
   
    //Exercise 3.24
-  final def hasSubsequence[B >: A](sub: List[B]): Boolean = ???
+  final def hasSubsequence[B >: A](sub: List[B]): Boolean = this match {
+    case Nil => sub == Nil
+    case Cons(x,xs) if this.startsWith(sub) => true
+    case Cons(x,xs) => xs.hasSubsequence(sub) 
+  }
+  
+  
+  
+
     
   
 
