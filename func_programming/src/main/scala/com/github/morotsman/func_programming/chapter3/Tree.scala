@@ -28,7 +28,10 @@ sealed trait Tree[+A] {
     case Branch(l,r) => fb(l.fold(fl)(fb),r.fold(fl)(fb))
   }
 
+  def depthInTermsOfFold: Int = fold(a => 1)((l,r) => 1 + (l max r))
   
+  def mapInTermsOfFold[B](f : A => B): Tree[B] =
+    fold(a => Leaf(f(a)): Tree[B])((l,r) => Branch(l,r))
   
 }
 
@@ -42,5 +45,8 @@ object Tree {
     case Leaf(v) => v
     case Branch(l,r) => maximum(l) max maximum(r)
   }
+  
+  def maximumInTermsOfFold(ts: Tree[Int]) : Int = 
+    ts.fold(a => a)(_ max _)
 
 }
