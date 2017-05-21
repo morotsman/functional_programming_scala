@@ -17,6 +17,7 @@ class EitherSpec  extends FlatSpec with Matchers{
     assert(isLeft(Either.Try(4/0).map(_+1))  == true)
   }  
   
+  
   "Either.Try(4/2).flatMap(v => Either.Try(6/v))" should "result in Right(3)" in {
     assert(Either.Try(4/2).flatMap(v => Either.Try(6/v))  == Right(3))
   }  
@@ -24,6 +25,8 @@ class EitherSpec  extends FlatSpec with Matchers{
   "Either.Try(4/0).flatMap(v => Either.Try(6/v))" should "result in Left(java.lang.ArithmeticException)" in {
     assert(isLeft(Either.Try(4/0).flatMap(v => Either.Try(6/v)))  == true)
   }  
+  
+  
   
   "Either.Try(4/0).orElse(Either.Try(4/1)).map(_+1)" should "result in Right(5)" in {
     assert(Either.Try(4/0).orElse(Either.Try(4/1)).map(_+1) == Right(5))
