@@ -48,11 +48,15 @@ class OptionSpec  extends FlatSpec with Matchers{
     assert(Some(2).flatMap(v => Some(v)) == Some(2))
   }  
   
-  def variance(xs: Seq[Double]): Option[Double] = {
-    val meanOfSeq = if(xs.length == 0) None else Some(xs.sum/xs.length)    
-    meanOfSeq.map(m => xs.map(x => math.pow(x-m,2))).map(s => s.sum/s.length)
-  }
+  def mean(xs: Seq[Double]): Option[Double] = 
+    if(xs.length == 0) None else Some(xs.sum/xs.length)
   
+  def variance(xs: Seq[Double]): Option[Double] = 
+     for(
+       m <- mean(xs);
+       variance <- mean(xs.map(x => math.pow(x - m, 2)))
+     ) yield variance
+       
   "map2(Some(2), Some(3))(_ + _)" should "result in Some(5)" in {
     assert(Option.map2(Some(2), Some(3))(_ + _) == Some(5))
   }  
@@ -90,7 +94,22 @@ class OptionSpec  extends FlatSpec with Matchers{
     assert(Option.traverse(List(2, 5, 4))(a => if(a==5) None else Some(a) ) == None)
   }     
 
-    
+  "sequenceInTermsOfTraverse(List())" should "result in Some(List()" in {
+    assert(Option.sequenceInTermsOfTraverse(List()) == Some(List()))
+  }   
+  
+  "sequenceInTermsOfTraverse(List(Some(2), Some(3), Some(4)))" should "result in Some(List(2,3,4)" in {
+    assert(Option.sequenceInTermsOfTraverse(List(Some(2), Some(3), Some(4))) == Some(List(2,3,4)))
+  } 
+  
+  "sequenceInTermsOfTraverse(List(None, Some(3), Some(4)))" should "result in None" in {
+    assert(Option.sequenceInTermsOfTraverse(List(None, Some(3), Some(4))) == None)
+  }   
+  
+  "sequenceInTermsOfTraverse(List(Some(2), Some(3), None))" should "result in None" in {
+    assert(Option.sequenceInTermsOfTraverse(List(Some(2), Some(3), None)) == None)
+    List(1,2,3).foldLeft(0)((a,b) => a + b)
+  }     
   
 
   
