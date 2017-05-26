@@ -1,5 +1,6 @@
 package com.github.morotsman.func_programming.chapter9
 
+/*
 import com.github.morotsman.func_programming.chapter8.Gen
 import com.github.morotsman.func_programming.chapter8.Prop
 
@@ -124,4 +125,7 @@ case class Location(input: String, offset: Int = 0) {
 case class ParseError(stack: List[(Location, String)] = List(),
                       otherFailures: List[ParseError] = List()) {
 }
+* 
+* */
+
 

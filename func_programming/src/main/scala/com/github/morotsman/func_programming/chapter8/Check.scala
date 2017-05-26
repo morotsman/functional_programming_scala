@@ -1,10 +1,11 @@
 package com.github.morotsman.func_programming.chapter8
-
+/*
 import Prop._
 import com.github.morotsman.func_programming.chapter6._
 import com.github.morotsman.func_programming.chapter5.Stream
-
+ 
 object Prop {
+ 
   type FailedCase = String
   type SuccessCount = Int
   type TestCases = Int
@@ -194,4 +195,6 @@ case class SGen[A](forSize: Int => Gen[A]) {
   def filter(f: A => Boolean): SGen[A] = ???
 
 }
+
+*/
 

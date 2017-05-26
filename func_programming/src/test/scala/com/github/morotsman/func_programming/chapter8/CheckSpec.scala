@@ -9,6 +9,7 @@ import com.github.morotsman.func_programming.chapter7.Par
 
 class CheckSpec extends FlatSpec with Matchers {
 
+  /*
   "Gen.choose(1,2)" should "result in 1" in {
     val rng: RNG = SimpleRNG(10)
     val (result, rng2) = Gen.choose(1, 2).sample.run(rng);
@@ -290,6 +291,6 @@ class CheckSpec extends FlatSpec with Matchers {
     }
     Prop.run(takeWhile)
   }  
-
+*/
 }
 

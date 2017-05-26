@@ -1,8 +1,9 @@
 package com.github.morotsman.func_programming.chapter5
 
 import org.scalatest._
-
+   
 class StreamSpec  extends FlatSpec with Matchers{
+  
   
   "Stream().headOption" should "result in None" in {
     assert(Stream().headOption == None)
@@ -11,14 +12,6 @@ class StreamSpec  extends FlatSpec with Matchers{
   "Stream(1,2,3).headOption" should "result in Some(1)" in {
     assert(Stream(1,2,3).headOption == Option(1))
   }  
-  
-  "Stream().headOptionInTermsOfFoldRight" should "result in None" in {
-    assert(Stream().headOptionInTermsOfFoldRight == None)
-  }
-  
-  "Stream(1,2,3).headOptionInTermsOfFoldRight" should "result in Some(1)" in {
-    assert(Stream(1,2,3).headOptionInTermsOfFoldRight == Option(1))
-  }      
   
   "Stream().toList" should "result in Nil" in {
     assert(Stream().toList == Nil)
@@ -32,7 +25,6 @@ class StreamSpec  extends FlatSpec with Matchers{
     assert(Stream(1,2,3).toList == List(1,2,3))
   } 
   
-
   "Stream().take(1)" should "result in Empty" in {
     assert(Stream().take(1) == Empty)
   }
@@ -41,8 +33,8 @@ class StreamSpec  extends FlatSpec with Matchers{
     assert(Stream(1).take(1).toList == List(1))
   }   
   
-  "Stream(1,2,3).take(1)" should "result in Stream(1)" in {
-    assert(Stream(1,2,3).take(1).toList == List(1))
+  "Stream(1,2,3,4,5,6,7,8,9,10).take(1)" should "result in Stream(1)" in {
+    assert(Stream(1,2,3,4,5,6,7,8,9,10).take(1).toList == List(1))
   } 
   
   "Stream(1,2,3).take(0)" should "result in Stream()" in {
@@ -55,9 +47,9 @@ class StreamSpec  extends FlatSpec with Matchers{
   
   "Stream(1,2,3).take(4)" should "result in Stream(1,2,3)" in {
     assert(Stream(1,2,3).take(4).toList == List(1,2,3))
-  }    
+  }   
   
-  "Stream().drop(0)" should "result in Empty" in {
+ "Stream().drop(0)" should "result in Empty" in {
     assert(Stream().drop(0) == Empty)
   }  
   
@@ -87,7 +79,7 @@ class StreamSpec  extends FlatSpec with Matchers{
   
   "Stream(1,2,3).drop(2)" should "result in Stream(3)" in {
     assert(Stream(1,2,3).drop(2).toList == List(3))
-  }     
+  }    
   
   "Stream(1,2,3).takeWhile(_ < 2)" should "result in Stream(1)" in {
     assert(Stream(1,2,3).takeWhile(_ < 2).toList == List(1))
@@ -104,6 +96,17 @@ class StreamSpec  extends FlatSpec with Matchers{
   "Stream(1,2,3).takeWhile(_ < 1)" should "result in Stream()" in {
     assert(Stream(1,2,3).takeWhile(_ < 1).toList == List())
   } 
+    
+  
+  /*
+  
+  "Stream().headOptionInTermsOfFoldRight" should "result in None" in {
+    assert(Stream().headOptionInTermsOfFoldRight == None)
+  }
+  
+  "Stream(1,2,3).headOptionInTermsOfFoldRight" should "result in Some(1)" in {
+    assert(Stream(1,2,3).headOptionInTermsOfFoldRight == Option(1))
+  }      
   
   "Stream().exists(_ == 2)" should "result in false" in {
     assert(Stream().exists(_ == 2) == false)
@@ -450,15 +453,7 @@ class StreamSpec  extends FlatSpec with Matchers{
     assert(Stream(1).tails.map(s => s.toList).toList == List(List(1),List()))
   } 
    
-  
+  */
  
-
-  
-  
-  
-  
-  
-
-  
 }
 
