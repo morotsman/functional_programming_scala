@@ -257,28 +257,29 @@ class StreamSpec  extends FlatSpec with Matchers{
     assert(Stream.constant("a").take(1).toList == List("a"))
   }    
     
-
-  
-  /*
-  
-  
-
-
-
- 
-  
-    
   "Stream.from(2).take(0)" should "result in Stream()" in {
     assert(Stream.from(2).take(0).toList == List())
   }  
   
   "Stream.from(2).take(3)" should "result in Stream(2,3,4)" in {
     assert(Stream.from(2).take(3).toList == List(2,3,4))
+  }
+  
+  "Stream.fibs.take(1)" should "result in Stream(0)" in {
+    assert(Stream.fibs.take(1).toList == List(0))
+  } 
+  
+  "Stream.fibs.take(2)" should "result in Stream(0,1)" in {
+    assert(Stream.fibs.take(2).toList == List(0,1))
+  }   
+  
+  "Stream.fibs.take(3)" should "result in Stream(0,1,1)" in {
+    assert(Stream.fibs.take(3).toList == List(0,1,1))
   }   
   
   "Stream.fibs.take(7)" should "result in Stream(0,1,1,2,3,5,8)" in {
     assert(Stream.fibs.take(7).toList == List(0,1,1,2,3,5,8))
-  }     
+  }    
   
   "Stream.onesInTermsOfUnfold.take(0)" should "result in Stream()" in {
     assert(Stream.onesInTermsOfUnfold.take(0).toList == List())
@@ -290,15 +291,15 @@ class StreamSpec  extends FlatSpec with Matchers{
   
   "Stream.onesInTermsOfUnfold.take(5)" should "result in Stream(1,1,1,1,1)" in {
     assert(Stream.onesInTermsOfUnfold.take(5).toList == List(1,1,1,1,1))
-  }   
-   
+  } 
+  
   "Stream.constantInTermsOfUnfold('a').take(5)" should "result in Stream('a','a','a','a','a')" in {
     assert(Stream.constantInTermsOfUnfold("a").take(5).toList == List("a", "a", "a", "a", "a"))
   }  
   
   "Stream.constantInTermsOfUnfold('a').take(0)" should "result in Stream()" in {
     assert(Stream.constantInTermsOfUnfold("a").take(1).toList == List("a"))
-  }   
+  } 
   
   "Stream.fromInTermsOfUnfold(2).take(0)" should "result in Stream()" in {
     assert(Stream.fromInTermsOfUnfold(2).take(0).toList == List())
@@ -307,6 +308,10 @@ class StreamSpec  extends FlatSpec with Matchers{
   "Stream.fromInTermsOfUnfold(2).take(3)" should "result in Stream(2,3,4)" in {
     assert(Stream.fromInTermsOfUnfold(2).take(3).toList == List(2,3,4))
   }  
+  
+  "Stream.fibsInTermsOfUnfold.take(1)" should "result in Stream(0)" in {
+    assert(Stream.fibs.take(1).toList == List(0))
+  }   
   
   "Stream.fibsInTermsOfUnfold.take(7)" should "result in Stream(0,1,1,2,3,5,8)" in {
     assert(Stream.fibs.take(7).toList == List(0,1,1,2,3,5,8))
@@ -317,12 +322,12 @@ class StreamSpec  extends FlatSpec with Matchers{
   }   
   
   "Stream(1).mapInTermsOfUnfold(_ + 1)" should "result in Stream(2)" in {
-    assert((Stream(1): Stream[Int]).mapInTermsOfUnfold(_ + 1).toList == List(2))
+    assert((Stream(1)).mapInTermsOfUnfold(_ + 1).toList == List(2))
   }     
   
   "Stream(1,2,3).mapInTermsOfUnfold(_ + 1)" should "result in Stream(2,3,4)" in {
     assert(Stream(1,2,3).mapInTermsOfUnfold(_ + 1).toList == List(2,3,4))
-  }
+  }  
   
  "Stream().takeInTermsOfUnfold(1)" should "result in Empty" in {
     assert(Stream().takeInTermsOfUnfold(1) == Empty)
@@ -366,7 +371,7 @@ class StreamSpec  extends FlatSpec with Matchers{
   
   "Stream(1,2,3).takeWhileInTermsOfUnfold(_ < 1)" should "result in Stream()" in {
     assert(Stream(1,2,3).takeWhileInTermsOfUnfold(_ < 1).toList == List())
-  }  
+  }    
   
   "Stream(1,2,3).zipWith(Stream(4,5,6))(_ + _)" should "result in Stream(5,7,9)" in {
     assert(Stream(1,2,3).zipWith(Stream(4,5,6))(_ + _).toList == List(5,7,9))
@@ -386,10 +391,8 @@ class StreamSpec  extends FlatSpec with Matchers{
   
   "Stream().zipWith(Stream(4,5,6))(_ + _)" should "result in Stream()" in {
     assert((Stream(): Stream[Int]).zipWith(Stream(4,5,6))(_ + _).toList == List())
-  }     
+  }    
     
-  
-  
   "Stream(1,2,3).zipAll(Stream(4,5,6))" should "result in Stream((Some(1), Some(4)), (Some(2), Some(5)), (Some(3), Some(6)))" in {
     assert(Stream(1,2,3).zipAll(Stream(4,5,6)).toList == List((Some(1), Some(4)), (Some(2), Some(5)), (Some(3), Some(6))))
   }  
@@ -412,9 +415,9 @@ class StreamSpec  extends FlatSpec with Matchers{
   
   "Stream().zipAll(Stream())" should "result in Stream()" in {
     assert(Stream().zipAll(Stream()).toList == List())
-  }   
+  }
   
-  "Stream(1,2,3).startsWith(Stream(1))" should "result in true" in {
+ "Stream(1,2,3).startsWith(Stream(1))" should "result in true" in {
     assert(Stream(1,2,3).startsWith(Stream(1)) == true)
   }   
   
@@ -444,7 +447,20 @@ class StreamSpec  extends FlatSpec with Matchers{
   
   "Stream(1).startsWith(Stream.ones)" should "result in false" in {
     assert(Stream(1).startsWith(Stream.ones) == false)
-  }   
+  }     
+  
+  /*
+ 
+  
+
+  
+   
+    
+  
+  
+ 
+  
+ 
   
   "Stream().tails" should "result in Stream(Stream())" in {
     assert(Stream().tails.map(s => s.toList).toList == List(List()))
