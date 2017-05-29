@@ -35,7 +35,7 @@ sealed trait Stream[+A] {
     case Cons(h, t)            => cons(h(), t().takeWhile(p))
   }
 
-  def peek(fun: A => Unit): Stream[A] = this match {
+  def peek[U](fun: A => U): Stream[A] = this match {
     case Empty => Empty
     case Cons(h, t) => {
       fun(h())
@@ -100,7 +100,8 @@ sealed trait Stream[+A] {
       case _ => None
     })
     
-  def startsWith[A](s2: Stream[A]): Boolean = ???
+  def startsWith[A](s2: Stream[A]): Boolean = 
+    !zipAll(s2).takeWhile(_._2 != None).exists(v => v._1 != v._2) 
 }
 
 case object Empty extends Stream[Nothing]

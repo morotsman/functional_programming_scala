@@ -418,6 +418,7 @@ class StreamSpec  extends FlatSpec with Matchers{
   }
   
  "Stream(1,2,3).startsWith(Stream(1))" should "result in true" in {
+   println("***********************")
     assert(Stream(1,2,3).startsWith(Stream(1)) == true)
   }   
   
