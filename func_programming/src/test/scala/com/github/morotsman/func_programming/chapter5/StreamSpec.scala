@@ -450,19 +450,6 @@ class StreamSpec  extends FlatSpec with Matchers{
     assert(Stream(1).startsWith(Stream.ones) == false)
   }     
   
-  /*
- 
-  
-
-  
-   
-    
-  
-  
- 
-  
- 
-  
   "Stream().tails" should "result in Stream(Stream())" in {
     assert(Stream().tails.map(s => s.toList).toList == List(List()))
   } 
@@ -472,13 +459,58 @@ class StreamSpec  extends FlatSpec with Matchers{
     assert(Stream(1,2,3).tails.map(s => s.toList).toList == List(List(1, 2, 3), List(2, 3), List(3), List()))
   } 
   
-  
-  
   "Stream(1).tails" should "result in Stream()" in {
     assert(Stream(1).tails.map(s => s.toList).toList == List(List(1),List()))
-  } 
-   
-  */
- 
+  }   
+  
+  
+  "Stream.fibs.hasSubsqequence(Stream(1,1))" should "result true" in {
+    assert(Stream.fibs.hasSubsqequence(Stream(5,8,13)) == true)
+  }     
+  
+  "Stream.ones.hasSubsqequence(Stream(1,1))" should "result true" in {
+    assert(Stream.ones.hasSubsqequence(Stream(1,1)) == true)
+  }   
+  
+  "Stream(1,2,3).hasSubsqequence(Stream(1,1))" should "result false" in {
+    assert(Stream(1,2,3).hasSubsqequence(Stream(1,1)) == false)
+  }    
+
+  
+  "Stream(1,2,3).scanLeft(10)(_ - _).toList" should "result in List(10,9,7,4)" in {
+    assert(Stream(1,2,3).scanLeft(10)(_ - _).toList == List(10,9,7,4))
+  }    
+  
+  "Stream().scanLeft(10)(_ - _).toList" should "result in List(10)" in {
+    assert(Stream[Int]().scanLeft(10)(_ - _).toList == List(10))
+  }  
+  
+  "Stream().scanRight(0)(_ + _).toList" should "result in List(0)" in {
+    assert(Stream[Int]().scanRight(0)(_ + _).toList == List(0))
+  }   
+  
+  "Stream(1,2,3).scanRight(0)(_ + _).toList" should "result in List(6,5,3,0)" in {
+    assert(Stream(1,2,3).scanRight(0)(_ + _).toList == List(6,5,3,0))
+  }   
+  
+  "Stream(1,2,3).scanRight(10)(_ - _).toList" should "result in List(-8,9,-7,10)" in {
+    assert(Stream(1,2,3).scanRight(10)(_ - _).toList == List(-8,9,-7,10))
+  }    
+  
+  "Stream().scanRightInTermsOfFoldRight(0)(_ + _).toList" should "result in List(0)" in {
+    assert(Stream[Int]().scanRightInTermsOfFoldRight(0)(_ + _).toList == List(0))
+  }   
+  
+  "Stream(1,2,3).scanRightInTermsOfFoldRight(0)(_ + _).toList" should "result in List(6,5,3,0)" in {
+    assert(Stream(1,2,3).scanRightInTermsOfFoldRight(0)(_ + _).toList == List(6,5,3,0))
+  }   
+  
+  "Stream(1,2,3).scanRightInTermsOfFoldRight(10)(_ - _).toList" should "result in List(-8,9,-7,10)" in {
+    assert(Stream(1,2,3).scanRightInTermsOfFoldRight(10)(_ - _).toList == List(-8,9,-7,10))
+  }    
+  
+  
+  
+  
 }
 

@@ -102,6 +102,31 @@ sealed trait Stream[+A] {
     
   def startsWith[A](s2: Stream[A]): Boolean = 
     !zipAll(s2).takeWhile(_._2 != None).exists(v => v._1 != v._2) 
+    
+  def tails: Stream[Stream[A]] = 
+    unfold(this)(s => if(s == Empty) None else Some(s, s.tail)).append(Stream(Stream())) 
+    
+  def hasSubsqequence[A](s: Stream[A]): Boolean = 
+    tails exists (_ startsWith s)  
+  
+  def scanLeft[B](z: => B)(f: (=> B, A) => B): Stream[B] = 
+    cons(z,unfold(this, z)(s => s._1.headOption.flatMap(h => Some((f(s._2,h), (s._1.tail, f(s._2,h))))))) 
+    
+  def scanRight[B](z: => B)(f: (A, => B) => B): Stream[B] = this match {
+    case Empty => Stream[B](z)
+    case Cons(h,t) => {
+      val right@Cons(newZ,_) = t().scanRight(z)(f)
+      val b = f(h(),newZ())
+      cons(b, right)
+    }
+  }
+  
+  def scanRightInTermsOfFoldRight[B](z: => B)(f: (A, => B) => B): Stream[B] =
+    foldRight(Stream(z))((a,sb) => {
+      val right@Cons(b,_) = sb
+      cons(f(a,b()), right)
+    })
+
 }
 
 case object Empty extends Stream[Nothing]
@@ -145,5 +170,7 @@ object Stream {
   
   def fibsInTermsOfUnfold: Stream[Int] = unfold((0,1))(v => Some(v._1, (v._2, v._1 + v._2)))
 
+
+  
 
 }
