@@ -17,6 +17,12 @@ class RNGSpec  extends FlatSpec with Matchers{
     assert(SimpleRNG(1).nextInt == (384748,SimpleRNG(25214903928L)))
   }
   
+  "randomPair" should "result two random ints" in {
+     val rng = NotSoRandom(List(1,3)) 
+     assert(RNG.randomPair(rng)._1 == (1,3))
+  }   
+  
+  
   "nonNegativeInt" should "result in non negative ints" in {
      val rng = NotSoRandom(List(-1,-2,3)) 
      assert(rng.nextInt._1 == -1)
@@ -30,10 +36,10 @@ class RNGSpec  extends FlatSpec with Matchers{
      assert(zero == 0)
      
      val (max, rng2) = RNG.double(rng1)
-     assert(max == 0.9999999995343387)
+     assert(max == 1.0)
      
      val (half, rng3) = RNG.double(rng2)
-     assert(half == 0.4999999995343387)       
+     assert(half == 0.49999999976716936)       
   }  
   
   "intDouble" should "result in int, double" in {
@@ -41,17 +47,18 @@ class RNGSpec  extends FlatSpec with Matchers{
     
      val ((max,half),rng1) = RNG.intDouble(rng) 
      assert(max == Int.MaxValue)
-     assert(half == 0.4999999995343387)
+     assert(half == 0.49999999976716936)
   } 
   
   "doubleInt" should "result in int, double" in {
     val rng = NotSoRandom(List(Int.MaxValue, Int.MaxValue/2))
     
-     val ((max,half),rng1) = RNG.intDouble(rng) 
-     assert(max == Int.MaxValue)
-     assert(half == 0.4999999995343387)
-  }   
-   
+     val ((max,half),rng1) = RNG.doubleInt(rng) 
+     assert(half == Int.MaxValue)
+     assert(max == 0.49999999976716936)
+  }  
+  
+  
   "ints" should "generate a number of ints" in {
     val rng = NotSoRandom(List(0,1,2,3,4,5))
     
@@ -61,13 +68,27 @@ class RNGSpec  extends FlatSpec with Matchers{
     assert(RNG.ints(6)(rng)._1 == List(0,1,2,3,4,5).reverse)
   }
   
+  "doubleInTermsOfMap" should "result in double" in {
+     val rng = NotSoRandom(List(0, Int.MaxValue, Int.MaxValue/2))
+     
+     val (zero,rng1) = RNG.doubleInTermsOfMap(rng) 
+     assert(zero == 0)
+     
+     val (max, rng2) = RNG.doubleInTermsOfMap(rng1)
+     assert(max == 1.0)
+     
+     val (half, rng3) = RNG.doubleInTermsOfMap(rng2)
+     assert(half == 0.49999999976716936)       
+  }    
+ 
+  
   "map2" should "map two rng's" in {
     val rng1 = NotSoRandom(List(1,2))
     val (result, nextRng) = RNG.map2(rng => rng.nextInt, rng => rng.nextInt)(_ + _) (rng1)
     assert(result == 3)
     
   }
-  
+ 
   "sequence" should "result in a list of randomnes" in {
     val rng = NotSoRandom(List(1,2,3))
 
@@ -88,6 +109,7 @@ class RNGSpec  extends FlatSpec with Matchers{
     assert(RNG.intsInTermsOfSequence(1)(rng)._1 == List(1))
     assert(RNG.intsInTermsOfSequence(3)(rng)._1 == List(3,2,1))
   }
+  /*
   
   "nonNegativeLessThan" should "generate numbers below a limit" in {
     
@@ -106,7 +128,6 @@ class RNGSpec  extends FlatSpec with Matchers{
     val rng1 = NotSoRandom(List(1,2))
     val (result, nextRng) = RNG.map2InTermsOfFlatMap(rng => rng.nextInt, rng => rng.nextInt)(_ + _) (rng1)
     assert(result == 3)
-    
   }
     
   
@@ -168,7 +189,7 @@ class RNGSpec  extends FlatSpec with Matchers{
      assert(result._1 == (14, 1))
      assert(result._2 == Machine(true, 1, 14))
   }  
-  
+  */
   
 
   
