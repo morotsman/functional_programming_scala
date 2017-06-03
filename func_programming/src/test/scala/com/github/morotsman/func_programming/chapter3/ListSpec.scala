@@ -24,6 +24,7 @@ class ListSpec extends FlatSpec with Matchers {
     val listOfFruit : List[Fruit] = List(Apple(), Orange())
     val anotherListOfFruit : List[Fruit] =  Cons(Orange(), listOfApple)
     val anotherListOfFruit2: List[Fruit] = listOfApple.append(listOfOrange)
+    val anotherListOfFruit3: List[Fruit] = listOfApple
     assert(true)
   }  
   
