@@ -23,6 +23,7 @@ class ListSpec extends FlatSpec with Matchers {
     val listOfOrange : List[Orange] = List(Orange())
     val listOfFruit : List[Fruit] = List(Apple(), Orange())
     val anotherListOfFruit : List[Fruit] =  Cons(Orange(), listOfApple)
+    val anotherListOfFruit2: List[Fruit] = listOfApple.append(listOfOrange)
     assert(true)
   }  
   
