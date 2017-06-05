@@ -109,37 +109,88 @@ class RNGSpec  extends FlatSpec with Matchers{
     assert(RNG.intsInTermsOfSequence(1)(rng)._1 == List(1))
     assert(RNG.intsInTermsOfSequence(3)(rng)._1 == List(3,2,1))
   }
-  /*
+  
+  "flatMap" should "map and flatten" in {
+    val rng = NotSoRandom(List(1,2))
+    
+    val (pair,_) = RNG.flatMap(RNG.int)(a => RNG.map(RNG.int)(b => (a,b)))(rng)
+    assert(pair == (1,2))
+  }
+  
   
   "nonNegativeLessThan" should "generate numbers below a limit" in {
     
-    val rng = NotSoRandom(List(-1,10,5))
+    val rng = NotSoRandom(List(-1,10,5,-3,4))
     
     assert(RNG.nonNegativeLessThan(11)(rng)._1 == 10)   
-    assert(RNG.nonNegativeLessThan(10)(rng)._1 == 0)
-    assert(RNG.nonNegativeLessThan(9)(rng)._1 == 1)
-    assert(RNG.nonNegativeLessThan(8)(rng)._1 == 2)
-      
-
-    
+    assert(RNG.nonNegativeLessThan(10)(rng)._1 == 5)
+    assert(RNG.nonNegativeLessThan(5)(rng)._1 == 4)
   }
   
   "map2InTermsOfFlatMap" should "map two rng's" in {
     val rng1 = NotSoRandom(List(1,2))
     val (result, nextRng) = RNG.map2InTermsOfFlatMap(rng => rng.nextInt, rng => rng.nextInt)(_ + _) (rng1)
     assert(result == 3)
+  }  
+  
+  "mapInTermsOfFlatMap" should "map one rng" in {
+    val rng1 = NotSoRandom(List(1,2))
+    val (result, nextRng) = RNG.mapInTermsOfFlatMap(rng => rng.nextInt)(_ + 2) (rng1)
+    assert(result == 3)
+  }  
+  
+  
+  "unit" should "add something to the state context" in {
+    import State._
+    val (a,s) = unit(1).run("ignored state")
+    assert(a == 1)
+    assert(s == "ignored state")
   }
-    
   
- 
-"intsInTermsOfSequence" should "result in a list of ints" in {
-     val ints = RNG.intsInTermsOfSequence(10)
-     assert(ints(SimpleRNG(1))._1.length == 10)
-  }     
+  "map" should "map something in the state context" in {
+    import State._
+    val (a,s) = unit(1).map(_+2).run("ignored state")
+    assert(a == 3)
+    assert(s == "ignored state")
+  }  
   
+  "map2" should "applicative map  something in the state context" in {
+    import State._
+    val (a,s) = unit(1).map2(unit[String,Int](1))(_+_).run("ignored state")
+    assert(a == 2)
+    assert(s == "ignored state")
+  } 
   
+  "flatMap" should "should chain context aware functions" in {
+    import State._
+    val (a,s) = unit(1).flatMap(a => unit[String,(Int,Int)]((a,a+1))).run("ignored state")
+    assert(a == (1,2))
+    assert(s == "ignored state")
+  }    
+  
+  "sequence" should "sequence" in {
+    import State._
+    val (a,s) = sequence[String, Int](List(unit(1), unit(2), unit(3))).run("ignored state")
+    assert(a == List(1,2,3))
+    assert(s == "ignored state")
+  }   
+  
+  "get" should "should return the state" in {
+    import State._
+    val (a,s) = unit(1).get.run("state")
+    assert(a == "state")
+    assert(s == "state")
+  } 
+  
+  "set" should "should replace state with new state" in {
+    import State._
+    val (a,s) = unit(1).set("another state").run("state")
+    assert(a == ())
+    assert(s == "another state")
+  }   
+   
   "no input" should "leave machine as is" in {
-     val simulation = Machine.simulateMachine(List())
+     val simulation = State.simulateMachine(List())
      val result = simulation.run(Machine(true, 10, 0))
      assert(result._1 == (0, 10))
      assert(result._2 == Machine(true, 10, 0))
@@ -147,48 +198,59 @@ class RNGSpec  extends FlatSpec with Matchers{
 
 
   "coin when locked" should "unlocked machine" in {
-     val simulation = Machine.simulateMachine(List(Coin))
+     val simulation = State.simulateMachine(List(Coin))
      val result = simulation.run(Machine(true, 10, 0))
      assert(result._1 == (1, 10))
      assert(result._2 == Machine(false, 10, 1))
   }
-  
+ 
   "coin when unlocked" should "do nothing" in {
-     val simulation = Machine.simulateMachine(List(Coin, Coin))
+     val simulation = State.simulateMachine(List(Coin, Coin))
      val result = simulation.run(Machine(true, 10, 0))
      assert(result._1 == (1, 10))
      assert(result._2 == Machine(false, 10, 1))
   }   
   
+  
+  
+  
   "turn when locked" should "do nothing" in {
-     val simulation = Machine.simulateMachine(List(Turn))
+     val simulation = State.simulateMachine(List(Turn))
      val result = simulation.run(Machine(true, 10, 0))
      assert(result._1 == (0, 10))
      assert(result._2 == Machine(true, 10, 0))
   }  
   
-  
-  
   "turn when unlocked" should "dispense candy" in {
-     val simulation = Machine.simulateMachine(List(Coin, Turn))
+     val simulation = State.simulateMachine(List(Coin, Turn))
      val result = simulation.run(Machine(true, 10, 0))
      assert(result._1 == (1, 9))
      assert(result._2 == Machine(true, 9, 1))
   }  
   
   "a machine with no candy" should "ignore input" in {
-     val simulation = Machine.simulateMachine(List(Coin, Turn, Coin, Turn, Coin, Turn))
+     val simulation = State.simulateMachine(List(Coin, Turn, Coin, Turn, Coin, Turn))
      val result = simulation.run(Machine(true, 1, 0))
      assert(result._1 == (1, 0))
      assert(result._2 == Machine(true, 0, 1))
-  }  
+  }
   
   "10 coins and 5 candies" should "result in (14,1) if 4 candies are bought" in {
-     val simulation = Machine.simulateMachine(List(Coin, Turn, Coin, Turn, Coin, Turn, Coin, Turn))
+     val simulation = State.simulateMachine(List(Coin, Turn, Coin, Turn, Coin, Turn, Coin, Turn))
      val result = simulation.run(Machine(true, 5, 10))
      assert(result._1 == (14, 1))
      assert(result._2 == Machine(true, 1, 14))
-  }  
+  }   
+  
+  /*
+  
+  
+  
+
+  
+
+  
+  
   */
   
 
