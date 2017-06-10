@@ -4,7 +4,6 @@ import org.scalatest._
 import java.util.concurrent._
 
 class NBParSpec extends FlatSpec with Matchers {
-  /*
   import NBPar._
 
   val es: ExecutorService = Executors.newFixedThreadPool(1);
@@ -40,7 +39,7 @@ class NBParSpec extends FlatSpec with Matchers {
     assert(NBPar.run(es)(reduce(list.head)(list.toIndexedSeq)((a, b) => if (a < b) b else a)) == 3)
   }
   
-  */
+  
 
 
 }
