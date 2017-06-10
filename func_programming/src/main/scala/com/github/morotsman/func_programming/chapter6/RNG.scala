@@ -28,6 +28,18 @@ object RNG {
     ((i1,i2), rng3)
   }
   
+  def between(start: Int, stopExclusive: Int): Rand[Int] = rng => {
+    val (i, rng2) = nonNegativeInt(rng)
+    val value = start + i % (stopExclusive-start)
+    (value,rng2)
+  }
+  
+  def boolean: Rand[Boolean] = { rng => 
+    val (i,rng2) = rng.nextInt
+    if(i % 2 == 0) (true,rng2) else (false,rng2)
+  }
+  
+  
   def nonNegativeInt: Rand[Int] = rng => {
     val (i, rng2) = rng.nextInt
     if(i > -1) (i,rng2) else nonNegativeInt(rng2)

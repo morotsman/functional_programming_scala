@@ -9,12 +9,19 @@ import com.github.morotsman.func_programming.chapter7.Par
 
 class CheckSpec extends FlatSpec with Matchers {
 
-  /*
+  
   "Gen.choose(1,2)" should "result in 1" in {
     val rng: RNG = SimpleRNG(10)
     val (result, rng2) = Gen.choose(1, 2).sample.run(rng);
     assert(result == 1)
   }
+  
+  "Gen.choose(1,20)" should "result in 1" in {
+    val rng: RNG = SimpleRNG(10)
+    val (result, rng2) = Gen.choose(1, 20).sample.run(rng);
+    assert(result == 9)
+  }  
+
 
   "Gen.choose(2,3)" should "result in 2" in {
     val rng: RNG = SimpleRNG(10)
@@ -35,6 +42,7 @@ class CheckSpec extends FlatSpec with Matchers {
     assert(result.forall { x => x == 1 || x == 2 })
   }
 
+  
   "Gen.choose(5,8)" should "result in 5, 6, 7" in {
     val rng: RNG = SimpleRNG(10)
     val choosers = List.fill(1000)(Gen.choose(5, 8).sample)
@@ -51,6 +59,7 @@ class CheckSpec extends FlatSpec with Matchers {
     val (result, rng2) = State.sequence(choosers).run(rng)
     assert(result.forall { x => x == -8 || x == -7 || x == -6 })
   }
+  
 
   "Gen.unit(42)" should "result in 42" in {
     val rng: RNG = SimpleRNG(10)
@@ -67,7 +76,7 @@ class CheckSpec extends FlatSpec with Matchers {
     assert(result.exists { x => x == false })
     assert(result.forall { x => x == true || x == false })
   }
-
+/*
   "Gen.listOfN(3, unit(42))" should "result in List(42,42,42)" in {
     val rng: RNG = SimpleRNG(10)
     val tmp: Gen[List[Int]] = Gen.listOfN(3, Gen.unit(42))
