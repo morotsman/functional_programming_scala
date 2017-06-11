@@ -76,20 +76,30 @@ class CheckSpec extends FlatSpec with Matchers {
     assert(result.exists { x => x == false })
     assert(result.forall { x => x == true || x == false })
   }
-/*
+  
+  "Gen.unit(42).flatMap { x => Gen.unit(43) }" should "result in 43" in {
+    val rng: RNG = SimpleRNG(10)
+    val (result, rng2) = Gen.unit(42).flatMap { x:Int => Gen.unit(43) }.sample.run(rng);
+    assert(result == 43)
+  }
+  
   "Gen.listOfN(3, unit(42))" should "result in List(42,42,42)" in {
     val rng: RNG = SimpleRNG(10)
     val tmp: Gen[List[Int]] = Gen.listOfN(3, Gen.unit(42))
     val (result, rng2) = Gen.listOfN(3, Gen.unit(42)).sample.run(rng)
     assert(result == List(42, 42, 42))
-  }
-
-  "Gen.unit(42).flatMap { x => Gen.unit(43) }" should "result in 43" in {
+  }  
+  
+  "Gen.listOfN(1000,Gen.choose(3, 6))" should "result in a list of random 3, 5 and 6's" in {
     val rng: RNG = SimpleRNG(10)
-    val (result, rng2) = Gen.unit(42).flatMap { x => Gen.unit(43) }.sample.run(rng);
-    assert(result == 43)
-  }
-
+    val (result, rng2) = Gen.listOfN(1000,Gen.choose(3, 6)).sample.run(rng);
+    assert(result.size == 1000)
+    assert(result.exists { x => x == 3 })
+    assert(result.exists { x => x == 4 })
+    assert(result.exists { x => x == 5 })
+    assert(result.forall { x => x == 3 || x == 4 || x == 5 })
+  } 
+  
   "Gen.choose(3, 6).listOfN(Gen.unit(1000))" should "result in a list of random 3, 5 and 6's" in {
     val rng: RNG = SimpleRNG(10)
     val (result, rng2) = Gen.choose(3, 6).listOfN(Gen.unit(1000)).sample.run(rng);
@@ -98,8 +108,8 @@ class CheckSpec extends FlatSpec with Matchers {
     assert(result.exists { x => x == 4 })
     assert(result.exists { x => x == 5 })
     assert(result.forall { x => x == 3 || x == 4 || x == 5 })
-  }
-
+  }  
+  
   "Gen.union(Gen.unit(1), Gen.unit(2)).listOfN(Gen.unit(1000))" should "result in a list of random 1 and 2's" in {
     val rng: RNG = SimpleRNG(10)
     val (result, rng2) = Gen.union(Gen.unit(1), Gen.unit(2)).listOfN(Gen.unit(1000)).sample.run(rng)
@@ -107,8 +117,18 @@ class CheckSpec extends FlatSpec with Matchers {
     assert(result.exists { x => x == 1 })
     assert(result.exists { x => x == 2 })
     assert(result.forall { x => x == 1 || x == 2 })
-    assert(result.filter(_ == 1).size == 502) //should be near 500
-  }
+    assert(result.filter(_ == 1).size == 498) //should be near 500
+    
+  }  
+  
+/*
+
+
+
+
+
+
+
 
   "Gen.weighted((Gen.unit(1),1), (Gen.unit(2),1)).listOfN(Gen.unit(1000))" should "result in a list of random 1 and 2's" in {
     val rng: RNG = SimpleRNG(10)
