@@ -86,6 +86,9 @@ sealed trait Stream[+A] {
   def takeWhileInTermsOfUnfold(p: A => Boolean): Stream[A] = 
     unfold(this)(s => s.headOption.flatMap(a => if(p(a)) Some((a,s.tail)) else None))
     
+  def zip[B](s2: Stream[B]): Stream[(A,B)] =
+    zipWith(s2)((_,_))  
+    
   def zipWith[B,C](s2: Stream[B])(f: (A,B) => C): Stream[C] = 
     unfold(this,s2)(streams =>  for(
         h1 <- streams._1.headOption;

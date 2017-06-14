@@ -117,19 +117,10 @@ class CheckSpec extends FlatSpec with Matchers {
     assert(result.exists { x => x == 1 })
     assert(result.exists { x => x == 2 })
     assert(result.forall { x => x == 1 || x == 2 })
-    assert(result.filter(_ == 1).size == 498) //should be near 500
+    assert(result.filter(_ == 1).size == 491) //should be near 500
     
   }  
   
-/*
-
-
-
-
-
-
-
-
   "Gen.weighted((Gen.unit(1),1), (Gen.unit(2),1)).listOfN(Gen.unit(1000))" should "result in a list of random 1 and 2's" in {
     val rng: RNG = SimpleRNG(10)
     val (result, rng2) = Gen.weighted((Gen.unit(1), 0.5), (Gen.unit(2), 0.5)).listOfN(Gen.unit(1000)).sample.run(rng)
@@ -137,19 +128,19 @@ class CheckSpec extends FlatSpec with Matchers {
     assert(result.exists { x => x == 1 })
     assert(result.exists { x => x == 2 })
     assert(result.forall { x => x == 1 || x == 2 })
-    assert(result.filter(_ == 1).size == 502) //should be near 500
+    assert(result.filter(_ == 1).size == 491) //should be near 500
   }
 
   "Gen.weighted((Gen.unit(1),0), (Gen.unit(2),1)).listOfN(Gen.unit(1000))" should "result in a list of 2's" in {
     val rng: RNG = SimpleRNG(10)
-    val (result, rng2) = Gen.weighted((Gen.unit(1), 0), (Gen.unit(2), 1)).listOfN(Gen.unit(1000)).sample.run(rng)
+    val (result, rng2) = Gen.weighted((Gen.unit(1), 0), (Gen.unit(2), 1.0)).listOfN(Gen.unit(1000)).sample.run(rng)
     assert(result.size == 1000)
     assert(result.forall { x => x == 2 })
   }
 
   "Gen.weighted((Gen.unit(1),1), (Gen.unit(2),0)).listOfN(Gen.unit(1000))" should "result in a list of 1's" in {
     val rng: RNG = SimpleRNG(10)
-    val (result, rng2) = Gen.weighted((Gen.unit(1), 1), (Gen.unit(2), 0)).listOfN(Gen.unit(1000)).sample.run(rng)
+    val (result, rng2) = Gen.weighted((Gen.unit(1), 1.0), (Gen.unit(2), 0)).listOfN(Gen.unit(1000)).sample.run(rng)
     assert(result.size == 1000)
     assert(result.forall { x => x == 1 })
   }
@@ -161,39 +152,42 @@ class CheckSpec extends FlatSpec with Matchers {
     assert(result.exists { x => x == 1 })
     assert(result.exists { x => x == 2 })
     assert(result.forall { x => x == 1 || x == 2 })
-    assert(result.filter(_ == 1).size == 262) //should be near 250
-  }
+    assert(result.filter(_ == 1).size == 243) //should be near 250
+  }  
+  
+
 
   "42" should "equal 42" in {
     val rng: RNG = SimpleRNG(10)
     val generator = Gen.unit(42);
     val prop = Prop.forAll(generator)(a => a == 42)
-    val result = prop.run(1, 1, rng)
-    assert(result == Prop.Passed)
+    val result = prop.run(1, rng)
+    assert(result == Passed)
   }
 
   "42" should "not equal 43" in {
     val rng: RNG = SimpleRNG(10)
     val generator = Gen.unit(42);
     val prop = Prop.forAll(generator)(a => a == 43)
-    val result = prop.run(1, 1, rng)
-    assert(result == Prop.Falsified("42", 0))
+    val result = prop.run(1, rng)
+    assert(result == Falsified("42", 0))
   }
 
   "42" should "not equal 43 2" in {
     val rng: RNG = SimpleRNG(10)
     val generator = Gen.unit(42);
     val prop = Prop.forAll(generator)(a => a == 43)
-    val result = prop.run(1, 1, rng)
-    assert(result == Prop.Falsified("42", 0))
+    val result = prop.run(1, rng)
+    assert(result == Falsified("42", 0))
   }
+
 
   "true and true" should "should pass" in {
     val rng: RNG = SimpleRNG(10)
     val trueGenerator = Gen.unit(true);
     val prop = Prop.forAll(trueGenerator)(a => a) && Prop.forAll(trueGenerator)(a => a)
-    val result = prop.run(1, 1, rng)
-    assert(result == Prop.Passed)
+    val result = prop.run(1, rng)
+    assert(result == Passed)
   }
 
   "true and false" should "should be falsified" in {
@@ -201,8 +195,8 @@ class CheckSpec extends FlatSpec with Matchers {
     val trueGenerator = Gen.unit(true);
     val falseGenerator = Gen.unit(false);
     val prop = Prop.forAll(trueGenerator)(a => a) && Prop.forAll(falseGenerator)(a => a)
-    val result = prop.run(1, 1, rng)
-    assert(result == Prop.Falsified("false", 0))
+    val result = prop.run(1, rng)
+    assert(result == Falsified("false", 0))
   }
 
   "false and true" should "should be falsified" in {
@@ -210,54 +204,66 @@ class CheckSpec extends FlatSpec with Matchers {
     val trueGenerator = Gen.unit(true);
     val falseGenerator = Gen.unit(false);
     val prop = Prop.forAll(falseGenerator)(a => a) && Prop.forAll(trueGenerator)(a => a)
-    val result = prop.run(1, 1, rng)
-    assert(result == Prop.Falsified("false", 0))
+    val result = prop.run( 1, rng)
+    assert(result == Falsified("false", 0))
   }
+  
+  "false and false" should "should be falsified" in {
+    val rng: RNG = SimpleRNG(10)
+    val trueGenerator = Gen.unit(true);
+    val falseGenerator = Gen.unit(false);
+    val prop = Prop.forAll(falseGenerator)(a => a) && Prop.forAll(falseGenerator)(a => a)
+    val result = prop.run( 1, rng)
+    assert(result == Falsified("false;false", 0))
+  }  
+
 
   "42 || 43" should "pass 42 or 43" in {
     val rng: RNG = SimpleRNG(10)
     val generator = Gen.unit(42);
     val prop = Prop.forAll(generator)(a => a == 42) || Prop.forAll(generator)(a => a == 43)
-    val result = prop.run(1, 1, rng)
-    assert(result == Prop.Passed)
+    val result = prop.run(1, rng)
+    assert(result == Passed)
   }
 
   "43 || 42" should "pass 42 or 43" in {
     val rng: RNG = SimpleRNG(10)
     val generator = Gen.unit(42);
     val prop = Prop.forAll(generator)(a => a == 43) || Prop.forAll(generator)(a => a == 42)
-    val result = prop.run(1, 1, rng)
-    assert(result == Prop.Passed)
+    val result = prop.run(1, rng)
+    assert(result == Passed)
   }
 
   "43 || 42" should "fail at 44" in {
     val rng: RNG = SimpleRNG(10)
     val generator = Gen.unit(44);
     val prop = Prop.forAll(generator)(a => a == 43) || Prop.forAll(generator)(a => a == 42)
-    val result = prop.run(1, 1, rng)
-    assert(result == Prop.Falsified("44", 0))
+    val result = prop.run(1, rng)
+    assert(result == Falsified("44;44", 0))
   }
-
+  
+  
   "listOf(0)" should "generate an empty list" in {
     val rng: RNG = SimpleRNG(10)
     val zeroGenerator = Gen.choose(0, 1)
-    val listGenerator = SGen.listOf(zeroGenerator)
+    val listGenerator = Gen.listOf(zeroGenerator)
     assert(listGenerator.forSize(0).sample.run(rng)._1 == List())
   }
 
   "listOf(1)" should "generate a list of one" in {
     val rng: RNG = SimpleRNG(10)
     val zeroGenerator = Gen.choose(0, 1)
-    val listGenerator = SGen.listOf(zeroGenerator)
+    val listGenerator = Gen.listOf(zeroGenerator)
     assert(listGenerator.forSize(1).sample.run(rng)._1 == List(0))
   }
 
   "listOf(4)" should "generate a list of four" in {
     val rng: RNG = SimpleRNG(10)
     val intGenerator = Gen.choose(0, 10)
-    val listGenerator = SGen.listOf(intGenerator)
+    val listGenerator = Gen.listOf(intGenerator)
     assert(listGenerator.forSize(4).sample.run(rng)._1 == List(4, 0, 6, 9))
-  }
+  } 
+  /*
 
   //tests using the new test framework
 
